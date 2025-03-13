@@ -7,14 +7,15 @@
             <input type="email" v-model="email" placeholder="Enter Email" />
             <input type="date" v-model="birthday" placeholder="Enter Birthday" />
             <input type="password" v-model="password" placeholder="Enter Password" />
-            <button v-on:click="signup">Sign Up </button>
+            <button type="button" v-on:click="signup">Sign Up </button>
         </div>
-
+        <p>
+            <router-link class="link_sign-up" to="/log-in">Log In</router-link>
+        </p>
     </div>
 
 </template>
 <script>
-
 import axios from 'axios';
 
 export default {
@@ -29,7 +30,7 @@ export default {
     },
     methods: {
         async signup() {
-            let result = await axios.post('https://movie-api-lina-834bc70d6952.herokuapp.com/users/signup', {
+            await axios.post('https://movie-api-lina-834bc70d6952.herokuapp.com/users/signup', {
                 Username: this.username,
                 Email: this.email,
                 Birthday: this.birthday,
@@ -37,20 +38,20 @@ export default {
             },
                 {
                     headers: { 'Content-Type': 'application/json' }
-                });
-
-            console.warn(result);
-            // console.warn("signup", this.username, this.password, this.email, this.birthday);
-            if (result.status === 201) {
-                localStorage.setItem('user', JSON.stringify(result.data))
-                this.$router.push({ name: 'HomePage' });
-            } else if (result.status === 422) {
-                alert(`Validation error: ${result.data.errors}`);
-            } else if (result.status === 409) {
-                alert('User with thise username already exist, please choose another username')
-            } else {
-                alert('sign up failed')
-            }
+                }).then((result) => {
+                    if (result.status === 201) {
+                        localStorage.setItem('user', JSON.stringify(result.data))
+                        this.$router.push({ name: 'HomePage' })
+                    }
+                }).catch((error) => {
+                    if (error.status === 422) {
+                        alert(`Validation error: ${error.data}`);
+                    } else if (error.status === 409) {
+                        alert('User with thise username already exist, please choose another username')
+                    } else {
+                        alert('sign up failed')
+                    }
+                })
         }
     },
     mounted() {
@@ -77,7 +78,8 @@ export default {
     justify-content: center;
 }
 
-.signUp input {
+.signUp input,
+.logIn input {
     width: 300px;
     height: 30px;
     padding-left: 20px;
@@ -87,7 +89,8 @@ export default {
     border-radius: 5px;
 }
 
-.signUp button {
+.signUp button,
+.logIn button {
     width: 200px;
     height: 30px;
     background-color: aqua;
@@ -96,8 +99,15 @@ export default {
     cursor: pointer;
 }
 
-.title_sign_up {
+.title_sign_up,
+.title_log-in {
     padding-bottom: 100px;
     color: white;
+}
+
+.link_sign-up,
+.link_log-in {
+    color: red;
+    margin: 100px;
 }
 </style>

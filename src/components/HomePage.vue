@@ -9,7 +9,7 @@ export default {
         let userData = localStorage.getItem('user')
         // when no user data found in localstorage, redirect to homepage
         if (!userData) {
-            this.$router.push({ name: 'SignUp' });
+            this.$router.push({ name: 'LogIn' });
         }
     }
 }
