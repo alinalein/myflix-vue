@@ -1,10 +1,15 @@
 <template>
+    <!-- <AppNavigation /> -->
+    <h1>test</h1>
 
-    <h1>Homepage</h1>
 </template>
+
 <script>
+// import AppNavigation from './AppNavigation.vue';
+
 export default {
     name: 'HomePage',
+    // components: { AppNavigation },
     mounted() {
         let userData = localStorage.getItem('user')
         // when no user data found in localstorage, redirect to homepage
@@ -13,6 +18,5 @@ export default {
         }
     }
 }
-
 </script>
 <style></style>

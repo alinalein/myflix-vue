@@ -30,28 +30,32 @@ export default {
     },
     methods: {
         async signup() {
-            await axios.post('https://movie-api-lina-834bc70d6952.herokuapp.com/users/signup', {
-                Username: this.username,
-                Email: this.email,
-                Birthday: this.birthday,
-                Password: this.password
-            },
-                {
-                    headers: { 'Content-Type': 'application/json' }
-                }).then((result) => {
-                    if (result.status === 201) {
-                        localStorage.setItem('user', JSON.stringify(result.data))
-                        this.$router.push({ name: 'HomePage' })
-                    }
-                }).catch((error) => {
-                    if (error.status === 422) {
-                        alert(`Validation error: ${error.data}`);
-                    } else if (error.status === 409) {
-                        alert('User with thise username already exist, please choose another username')
-                    } else {
-                        alert('sign up failed')
-                    }
-                })
+            try {
+                let reponse = await axios.post('https://movie-api-lina-834bc70d6952.herokuapp.com/users/signup', {
+                    Username: this.username,
+                    Email: this.email,
+                    Birthday: this.birthday,
+                    Password: this.password
+                },
+                    {
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+
+                if (reponse.status === 201) {
+                    this.$router.push({ name: 'HomePage' })
+                    localStorage.getItem('user', JSON.stringify(reponse.data))
+                }
+            }
+            catch (error) {
+                if (error.status === 422) {
+                    alert('could not sign up, please fill out all fields accordingly ')
+                } else if (error.status === 409) {
+                    alert('username already exist, please pick another one')
+                } else {
+                    alert('un unexpected error happened')
+                }
+
+            }
         }
     },
     mounted() {
@@ -100,7 +104,7 @@ export default {
 }
 
 .title_sign_up,
-.title_log-in {
+.title_login {
     padding-bottom: 100px;
     color: white;
 }
