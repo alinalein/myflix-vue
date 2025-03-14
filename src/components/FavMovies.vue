@@ -1,13 +1,15 @@
 <template>
-    <div class="movie-card" v-for="movie in favMovies" :key="movie.id">
-        <img class="movie-card__img" :src="movie.ImagePath" :alt="movie.Title" />
-        <p>
-            {{ movie.Title }}
-        </p>
-        <p>
-            {{ movie.Director.Name }}
-        </p>
-        <button @click="deleteMovie(movie._id)">Remove From Favorites</button>
+    <div class="movies_view">
+        <div class="movie-card" v-for="movie in favMovies" :key="movie.id">
+            <img class="movie-card__img" :src="movie.ImagePath" :alt="movie.Title" />
+            <p>
+                {{ movie.Title }}
+            </p>
+            <p>
+                {{ movie.Director.Name }}
+            </p>
+            <button @click="handleDelete(movie._id)">Remove From Favorites</button>
+        </div>
     </div>
 </template>
 
@@ -45,7 +47,14 @@ export default {
                 alert('An error occurred while fetching the movies.');
             }
         },
-        deleteMovie
+        async handleDelete(movieId) {
+            try {
+                await deleteMovie(movieId);  // Call the delete function
+                this.favMovies = this.favMovies.filter(movie => movie._id !== movieId); // update UI 
+            } catch (error) {
+                console.error('Error deleting movie:', error.response?.data || error.message);
+            }
+        }
     },
     mounted() {
         this.fetchMovies();

@@ -8,8 +8,13 @@
             <p>
                 {{ movie.Director.Name }}
             </p>
-            <button @click="addMovie(movie._id)">Add to Favorites</button>
-            <button @click="deleteMovie(movie._id)">Remove From Favorites</button>
+            <button v-if="isFavorite(movie._id)" @click="handleDeleteMovie(movie._id)">
+                Remove from Favorites
+            </button>
+            <button v-if="!isFavorite(movie._id)" @click="handleAddMovie(movie._id)">
+                Add to Favorites
+            </button>
+
         </div>
     </div>
 </template>
@@ -22,7 +27,8 @@ export default {
     name: 'HomePage',
     data() {
         return {
-            movies: []
+            movies: [],
+            favorites: []
         }
     },
     methods: {
@@ -40,15 +46,33 @@ export default {
                 alert('An error occurred while fetching the movies.');
             }
         },
-        addMovie,
-        deleteMovie
+        async handleAddMovie(movieId) {
+            await addMovie(movieId);
+
+            const userData = JSON.parse(localStorage.getItem('user'));
+            this.favorites = userData.FavoriteMovies; // gets actual list with favs from local 
+        },
+
+        async handleDeleteMovie(movieId) {
+            await deleteMovie(movieId);
+
+            const userData = JSON.parse(localStorage.getItem('user'));
+            this.favorites = userData.FavoriteMovies;
+        },
+
+        isFavorite(movieId) {
+            return this.favorites.includes(movieId);
+        }
     },
     mounted() {
         this.fetchMovies();
-        let userData = localStorage.getItem('user')
+        let userData = JSON.parse(localStorage.getItem('user')); // need to be parsed to object that can access FavoriteMovies
         // when no user data found in localstorage, redirect to homepage
         if (!userData) {
             this.$router.push({ name: 'LogIn' });
+        }
+        else {
+            this.favorites = userData.FavoriteMovies || [];  // load favorites from localStorage
         }
     }
 }

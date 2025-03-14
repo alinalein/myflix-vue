@@ -11,6 +11,15 @@ export const addMovie = async (id) => {
 
             })
         if (response.status === 200) {
+            // returned user that has the data username & favmovies is called !! updatedUser !!, 
+            // for that reason merge the user in the localstorage with user returned by api
+            const existingUserData = JSON.parse(localStorage.getItem('user'));
+            const updatedUserData = {
+                ...existingUserData,
+                ...response.data.updatedUser
+            };
+            localStorage.setItem('user', JSON.stringify(updatedUserData));
+
             alert('movie added to favorites')
         }
 
@@ -30,6 +39,12 @@ export const deleteMovie = async (id) => {
                 headers: { Authorization: `Bearer ${token}` }
             })
         if (response.status === 200) {
+            const existingUserData = JSON.parse(localStorage.getItem('user'));
+            const updatedUserData = {
+                ...existingUserData,
+                ...response.data.updatedUser
+            };
+            localStorage.setItem('user', JSON.stringify(updatedUserData));
             alert('the movie was deleted from the favs')
         }
     } catch (error) {
