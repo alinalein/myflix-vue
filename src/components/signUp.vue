@@ -31,7 +31,7 @@ export default {
     methods: {
         async signup() {
             try {
-                let reponse = await axios.post('https://movie-api-lina-834bc70d6952.herokuapp.com/users/signup', {
+                let response = await axios.post('https://movie-api-lina-834bc70d6952.herokuapp.com/users/signup', {
                     Username: this.username,
                     Email: this.email,
                     Birthday: this.birthday,
@@ -41,9 +41,10 @@ export default {
                         headers: { 'Content-Type': 'application/json' }
                     })
 
-                if (reponse.status === 201) {
+                if (response.status === 201) {
                     this.$router.push({ name: 'HomePage' })
-                    localStorage.getItem('user', JSON.stringify(reponse.data))
+                    localStorage.setItem('user', JSON.stringify(response.data.user))
+                    localStorage.setItem('token', response.data.token)
                 }
             }
             catch (error) {
@@ -104,7 +105,7 @@ export default {
 }
 
 .title_sign_up,
-.title_login {
+.title_log_in {
     padding-bottom: 100px;
     color: white;
 }

@@ -35,7 +35,8 @@ export default {
 
                 })
                 if (response.status === 201) {
-                    localStorage.setItem('user', JSON.stringify(response.data))
+                    localStorage.setItem('user', JSON.stringify(response.data.user))
+                    localStorage.setItem('token', response.data.token)
                     this.$router.push({ name: 'HomePage' })
                 }
             } catch (error) {

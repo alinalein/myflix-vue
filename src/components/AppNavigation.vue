@@ -3,12 +3,13 @@
         <template v-if="!isUserLoggedIn">
             <router-link to="log-in">Log In</router-link>
             <router-link to="sign-up">Sign Up</router-link>
-
         </template>
         <template v-else>
-            <router-link to="#">My Movies</router-link>
-            <router-link to="#">Search for Movie</router-link>
             <router-link to="/">Home</router-link>
+            <router-link to="#">Genres</router-link>
+            <router-link to="fav-movies">My List</router-link>
+            <router-link to="#">Search for Movie</router-link>
+
             <router-link to="/profile">My Profile</router-link>
             <a v-on:click="logout" ref="">Log Out</a>
         </template>
@@ -51,15 +52,16 @@ export default {
     display: flex;
 }
 
-.nav a {
+.nav a,
+.nav router-link {
     cursor: pointer;
     color: black;
     padding: 10px 20px;
 }
 
+/* pushes all after 5th child to left */
 .nav a:nth-child(5) {
     color: blue;
-    /* Example style */
     margin-left: auto;
 }
 
